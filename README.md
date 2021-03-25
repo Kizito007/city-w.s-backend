@@ -8,3 +8,5 @@
 > Then clone using * git clone "link" on your terminal *
 > npm install
 > start: node app.js or nodemon
+
+\* Made in JavaScript with ❤ by Marshall, Kizito & Chinedu \*
