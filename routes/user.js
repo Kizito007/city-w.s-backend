@@ -1,12 +1,14 @@
 const router = require("express").Router(),
     User = require("../models/users"),
-    // auth = require("../middleware/auth"),
+    auth = require("../middleware/auth"),
     jwt = require("jsonwebtoken"),
     bcrypt = require("bcryptjs");
 
+//REGISTER USER
 router.post('/register', async (req, res) => {
     try {
-        let { email, password, passwordCheck, displayName } = req.body;
+
+        let { firstName, lastName, email, password, passwordCheck, phoneNumber, address, LGA, state } = req.body;
 
         //validate
         if (!email || !password || !passwordCheck)
@@ -28,15 +30,20 @@ router.post('/register', async (req, res) => {
                 .status(400)
                 .json({msg: "An account with this email already exist"})
 
-        if (!displayName) displayName = email;
+        // if (!displayName) displayName = email;
 
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt)
         
         const newUser = new User({
+            firstName,
+            lastName,
             email,
             password: passwordHash,
-            displayName
+            phoneNumber,
+            address,
+            LGA,
+            state,
         });
 
         const savedUser = await newUser.save();
@@ -49,6 +56,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
+//LOGIN USER
 router.post('/login', async (req, res) => {
     try{
 
@@ -75,7 +83,7 @@ router.post('/login', async (req, res) => {
             token,
             user: {
                 id: user._id,
-                displayName: user.displayName,
+                firstName: user.firstName,
                 // email: user.email,
             }
         })
@@ -85,8 +93,8 @@ router.post('/login', async (req, res) => {
     }
 });
 
-//auth,
-router.delete('/delete', async (req, res) => {
+//DELETE ACCOUNT
+router.delete('/delete', auth, async (req, res) => {
     try {
 
         const deletedUser = await User.findByIdAndDelete(req.user)
@@ -97,6 +105,7 @@ router.delete('/delete', async (req, res) => {
     }
 });
 
+//VALIDATE TOKEN
 router.post('/tokenIsValid', async (req, res) => {
     try {
 
@@ -116,13 +125,56 @@ router.post('/tokenIsValid', async (req, res) => {
     }
 });
 
-//auth,
-router.get("/", async (req, res) => {
-    const user = await User.findById(req.user)
-    res.json({
-        displayName: user.displayName,
-        id: user._id,
-    })
+//FIND SPECIFIC USER
+router.get("/", auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user)
+        res.status(200).send({
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            address: user.address,
+            phoneNumber: user.phoneNumber,            
+            LGA: user.LGA,            
+            state: user.state,            
+        })
+    } catch (err){
+        res.status(500).send({ error: err.message })
+    }
+});
+
+//FIND ALL USERS
+router.get("/all", auth, async (req, res) => {
+    try {
+        const users = await User.find({})
+        res.status(200).send({
+            users: users            
+        })
+    } catch (err){
+        res.status(500).send({ error: err.message })
+    }
+});
+
+//UPDATE user ROUTE
+router.put("/update/:id", auth, async (req, res) => {
+//find and update the correct user
+    try {
+        User.findByIdAndUpdate(
+            { _id: req.params.id },
+            req.body,
+            function (err, updatedUser) {
+            if (err) {
+                res.sendStatus(404);
+            } else {
+                    res.status(201).send(updatedUser);
+                }
+            }
+        );
+    }
+    catch (err){
+        console.log(err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 module.exports = router;

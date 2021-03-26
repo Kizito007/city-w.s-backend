@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     phoneNumber: { type: String },
     address: { type: String },
     LGA: { type: String },
+    state: { type: String },
 })
 
 module.exports = User = mongoose.model("user", userSchema);
