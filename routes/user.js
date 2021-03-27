@@ -156,11 +156,11 @@ router.get("/all", auth, async (req, res) => {
 });
 
 //UPDATE user ROUTE
-router.put("/update/:id", auth, async (req, res) => {
+router.put("/update", auth, async (req, res) => {
 //find and update the correct user
     try {
         User.findByIdAndUpdate(
-            { _id: req.params.id },
+            { _id: req.user },
             req.body,
             function (err, updatedUser) {
             if (err) {
