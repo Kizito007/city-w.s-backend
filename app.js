@@ -23,6 +23,7 @@ connection.once("open", () => {
 
 //setup routes
 app.use("/users", require("./routes/user"));
+app.use("/ringlights", require("./routes/ringlight"));
 
 app.get('/', (req, res) => {
     res.send("Hello World");
