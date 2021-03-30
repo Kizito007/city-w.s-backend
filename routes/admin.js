@@ -81,7 +81,7 @@ router.get("/all", auth, adminAuth, async (req, res) => {
 });
 
 //UPDATE AN Admin
-router.put("/update/:id", auth, async (req, res) => {
+router.put("/update/:id", auth, adminAuth, async (req, res) => {
     try {
       const admin = await Admin.findOne({
         _id: req.params.id,
@@ -101,7 +101,7 @@ router.put("/update/:id", auth, async (req, res) => {
 });
 
 //DELETE AN Admin
-router.delete('/delete/:id', auth, async (req, res) => {
+router.delete('/delete/:id', auth, adminAuth, async (req, res) => {
     try {
         let admin = req.params.id;
         const deletedAdmin = await Admin.findByIdAndDelete(admin)

@@ -1,9 +1,10 @@
 var router = require("express").Router(),
   auth = require("../middleware/auth"),
+  adminAuth = require("../middleware/adminAuth"),
   I_Case = require("../models/i_cases");
 
 // Create new i_case
-router.post("/new", auth, async (req, res) => {        
+router.post("/new", auth, adminAuth, async (req, res) => {        
     try {
         let {
             descrp,
@@ -62,7 +63,7 @@ router.get("/all", auth, async (req, res) => {
 });
 
 //UPDATE AN I_CASE
-router.put("/update/:id", auth, async (req, res) => {
+router.put("/update/:id", auth, adminAuth, async (req, res) => {
     try {
       const i_case = await I_Case.findOne({
         _id: req.params.id,
@@ -82,7 +83,7 @@ router.put("/update/:id", auth, async (req, res) => {
 });
 
 //DELETE AN I_CASE
-router.delete('/delete/:id', auth, async (req, res) => {
+router.delete('/delete/:id', auth, adminAuth, async (req, res) => {
     try {
         let i_case = req.params.id;
         const deletedIcase = await I_Case.findByIdAndDelete(i_case)

@@ -1,9 +1,10 @@
 var router = require("express").Router(),
   auth = require("../middleware/auth"),
+  adminAuth = require("../middleware/adminAuth"),
   Ringlight = require("../models/ringlights");
 
 // Create new ringlight
-router.post("/new", auth, async (req, res) => {        
+router.post("/new", auth, adminAuth, async (req, res) => {        
     try {
         let {
             descrp,
@@ -62,7 +63,7 @@ router.get("/all", auth, async (req, res) => {
 });
 
 //UPDATE A RINGLIGHT
-router.put("/update/:id", auth, async (req, res) => {
+router.put("/update/:id", auth, adminAuth, async (req, res) => {
     try {
       const ringlight = await Ringlight.findOne({
         _id: req.params.id,
@@ -82,7 +83,7 @@ router.put("/update/:id", auth, async (req, res) => {
 });
 
 //DELETE A RINGLIGHT
-router.delete('/delete/:id', auth, async (req, res) => {
+router.delete('/delete/:id', auth, adminAuth, async (req, res) => {
     try {
         let light = req.params.id;
         const deletedRinglight = await Ringlight.findByIdAndDelete(light)
