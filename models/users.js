@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     address: { type: String },
     LGA: { type: String },
     state: { type: String },
+    adminId: { type: String },
 })
 
 module.exports = User = mongoose.model("user", userSchema);

@@ -23,6 +23,7 @@ connection.once("open", () => {
 
 //setup routes
 app.use("/v1/users", require("./routes/user"));
+app.use("/v1/admins", require("./routes/admin"));
 app.use("/v1/i-cases", require("./routes/i_case"));
 app.use("/v1/ringlights", require("./routes/ringlight"));
 
