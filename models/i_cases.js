@@ -13,6 +13,7 @@ const i_caseSchema = mongoose.Schema({
     arrival: { type: String },
     //Add reviews field
     ratings: { type: String },
+    color: { type: String },
 })
 
 module.exports = I_Case = mongoose.model("i_case", i_caseSchema);

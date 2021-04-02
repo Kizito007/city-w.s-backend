@@ -19,6 +19,7 @@ router.post("/new", auth, adminAuth, async (req, res) => {
             arrival,
             //Add reviews field
             ratings,
+            color,
         } = req.body;
         const newIcase = new I_Case({
             descrp,
@@ -30,6 +31,7 @@ router.post("/new", auth, adminAuth, async (req, res) => {
             sale,
             arrival,
             ratings,
+            color,
         });
 
         const savedIcase = await newIcase.save();
