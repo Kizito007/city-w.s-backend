@@ -1,11 +1,12 @@
-const Admin = require("../models/admins");
+const User = require("../models/users");
 
 const adminAuth = async (req, res, next) => {
     try {
         let user = req.user;
-        let admi = await Admin.find({ userId: user })
+        let person = await User.findById({ _id: user })
 
-        if (!admi)
+        let right = person.role
+        if (right !== "boss" && right !== "admin")
             return res
                 .status(401)
                 .json({msg: "Not an admin"})

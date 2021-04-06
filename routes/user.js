@@ -2,6 +2,7 @@ const router = require("express").Router(),
     User = require("../models/users"),
     auth = require("../middleware/auth"),
     jwt = require("jsonwebtoken"),
+    adminAuth = require("../middleware/adminAuth"),
     bcrypt = require("bcryptjs");
 
 //REGISTER USER
@@ -10,9 +11,17 @@ router.post('/register', async (req, res) => {
 
         let { firstName, lastName, email, password, passwordCheck, phoneNumber, address, LGA, state } = req.body;
 
+        let right;
+
         //validate
         if (!email || !password || !passwordCheck)
             return res.status(400).send({msg: "Not all fields have been entered."});
+
+        if (email === process.env.bossMail) {
+            right = "boss"
+        } else {
+            right = "user"
+        }
 
         if (password.length < 5) 
             return res
@@ -44,6 +53,7 @@ router.post('/register', async (req, res) => {
             address,
             LGA,
             state,
+            role: right,
         });
 
         const savedUser = await newUser.save();
@@ -144,7 +154,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 //FIND ALL USERS
-router.get("/all", auth, async (req, res) => {
+router.get("/all", auth, adminAuth, async (req, res) => {
     try {
         const users = await User.find({})
         res.status(200).send({

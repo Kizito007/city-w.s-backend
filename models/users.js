@@ -9,7 +9,12 @@ const userSchema = new mongoose.Schema({
     address: { type: String },
     LGA: { type: String },
     state: { type: String },
-    adminId: { type: String },
+    // adminId: { type: String },
+    role: {
+        type: String,
+        default: "admin",
+        enum: ["user", "admin", "boss"]
+    },
 })
 
 module.exports = User = mongoose.model("user", userSchema);
